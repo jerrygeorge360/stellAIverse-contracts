@@ -55,13 +55,7 @@ fn test_lock_and_bridge_and_fee_calculation() {
     let signer = Address::generate(&env);
     let signers = Vec::from_array(&env, [signer.clone()]);
 
-    bridge.init_contract(
-        &admin,
-        &agent_contract,
-        &payment_token,
-        &signers,
-        &1u32,
-    );
+    bridge.init_contract(&admin, &agent_contract, &payment_token, &signers, &1u32);
 
     let notional_value: i128 = 100_000;
     let target_chain: u32 = 1;
@@ -104,18 +98,11 @@ fn test_m_of_n_approvals_and_unwrap_flow() {
     let signers = Vec::from_array(&env, [signer1.clone(), signer2.clone(), signer3.clone()]);
 
     // 2-of-3 M-of-N
-    bridge.init_contract(
-        &admin,
-        &agent_contract,
-        &payment_token,
-        &signers,
-        &2u32,
-    );
+    bridge.init_contract(&admin, &agent_contract, &payment_token, &signers, &2u32);
 
     let notional_value: i128 = 50_000;
     let target_chain: u32 = 2;
-    let bridge_id =
-        bridge.lock_and_bridge(&2u64, &owner, &target_chain, &notional_value);
+    let bridge_id = bridge.lock_and_bridge(&2u64, &owner, &target_chain, &notional_value);
 
     // Outbound approvals
     bridge.approve_outbound(&signer1, &bridge_id);
@@ -163,18 +150,11 @@ fn test_bridge_expiration() {
     let signer = Address::generate(&env);
     let signers = Vec::from_array(&env, [signer.clone()]);
 
-    bridge.init_contract(
-        &admin,
-        &agent_contract,
-        &payment_token,
-        &signers,
-        &1u32,
-    );
+    bridge.init_contract(&admin, &agent_contract, &payment_token, &signers, &1u32);
 
     let notional_value: i128 = 10_000;
     let target_chain: u32 = 3;
-    let bridge_id =
-        bridge.lock_and_bridge(&3u64, &owner, &target_chain, &notional_value);
+    let bridge_id = bridge.lock_and_bridge(&3u64, &owner, &target_chain, &notional_value);
 
     // Move time forward beyond expiration
     let now = env.ledger().timestamp();
@@ -185,4 +165,3 @@ fn test_bridge_expiration() {
     let res = bridge.try_approve_outbound(&signer, &bridge_id);
     assert!(res.is_err());
 }
-

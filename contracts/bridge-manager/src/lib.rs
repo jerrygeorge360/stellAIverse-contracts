@@ -105,11 +105,7 @@ impl BridgeManager {
         signers: Vec<Address>,
         m_required: u32,
     ) -> Result<(), BridgeError> {
-        if env
-            .storage()
-            .instance()
-            .has(&DataKey::Admin)
-        {
+        if env.storage().instance().has(&DataKey::Admin) {
             return Err(BridgeError::AlreadyInitialized);
         }
 
@@ -134,19 +130,13 @@ impl BridgeManager {
             signers,
             m_required,
         };
-        env.storage()
-            .instance()
-            .set(&DataKey::SignerConfig, &cfg);
+        env.storage().instance().set(&DataKey::SignerConfig, &cfg);
 
-        env.storage()
-            .instance()
-            .set(&DataKey::BridgeCounter, &0u64);
+        env.storage().instance().set(&DataKey::BridgeCounter, &0u64);
         env.storage()
             .instance()
             .set(&DataKey::LiquidityBalance, &0i128);
-        env.storage()
-            .instance()
-            .set(&DataKey::FeeBalance, &0i128);
+        env.storage().instance().set(&DataKey::FeeBalance, &0i128);
 
         Ok(())
     }
@@ -171,9 +161,7 @@ impl BridgeManager {
             signers,
             m_required,
         };
-        env.storage()
-            .instance()
-            .set(&DataKey::SignerConfig, &cfg);
+        env.storage().instance().set(&DataKey::SignerConfig, &cfg);
         Ok(())
     }
 
@@ -254,9 +242,7 @@ impl BridgeManager {
         env.storage()
             .instance()
             .set(&DataKey::LiquidityBalance, &liquidity);
-        env.storage()
-            .instance()
-            .set(&DataKey::FeeBalance, &fees);
+        env.storage().instance().set(&DataKey::FeeBalance, &fees);
 
         // Allocate bridge id.
         let counter: u64 = env
@@ -264,9 +250,7 @@ impl BridgeManager {
             .instance()
             .get(&DataKey::BridgeCounter)
             .unwrap_or(0);
-        let bridge_id = counter
-            .checked_add(1)
-            .ok_or(BridgeError::InvalidAmount)?;
+        let bridge_id = counter.checked_add(1).ok_or(BridgeError::InvalidAmount)?;
         env.storage()
             .instance()
             .set(&DataKey::BridgeCounter, &bridge_id);
@@ -298,7 +282,14 @@ impl BridgeManager {
 
         env.events().publish(
             (Symbol::new(&env, "BridgeOutboundInitiated"),),
-            (bridge_id, agent_id, owner, target_chain, notional_value, fee),
+            (
+                bridge_id,
+                agent_id,
+                owner,
+                target_chain,
+                notional_value,
+                fee,
+            ),
         );
 
         Ok(bridge_id)
@@ -306,11 +297,7 @@ impl BridgeManager {
 
     /// Approve outbound bridge (M-of-N signers). When threshold reached, marks
     /// the bridge as `OutboundCompleted`.
-    pub fn approve_outbound(
-        env: Env,
-        signer: Address,
-        bridge_id: u64,
-    ) -> Result<(), BridgeError> {
+    pub fn approve_outbound(env: Env, signer: Address, bridge_id: u64) -> Result<(), BridgeError> {
         signer.require_auth();
         Self::require_signer(&env, &signer)?;
 
@@ -587,9 +574,7 @@ impl BridgeManager {
                 || req.status == BridgeStatus::PendingInbound
                 || req.status == BridgeStatus::InboundApproved)
     }
-
 }
 
 #[cfg(test)]
 mod test;
-
