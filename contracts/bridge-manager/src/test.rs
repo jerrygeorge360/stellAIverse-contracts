@@ -2,7 +2,7 @@
 
 use super::*;
 use soroban_sdk::testutils::{Address as _, Ledger};
-use soroban_sdk::{Address, Env, Vec, String};
+use soroban_sdk::{Address, Env, Vec};
 
 use crate::BridgeManagerClient;
 

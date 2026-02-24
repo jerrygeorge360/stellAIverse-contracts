@@ -1,9 +1,6 @@
 #![no_std]
 
-use soroban_sdk::{
-    contract, contracterror, contractimpl, contracttype, Address, Bytes, Env, IntoVal, Symbol,
-    Val, Vec,
-};
+use soroban_sdk::{contract, contracterror, contractimpl, contracttype, Address, Env, Symbol, Vec};
 
 #[derive(Clone)]
 #[contracttype]
@@ -233,7 +230,7 @@ impl BridgeManager {
             return Err(BridgeError::InvalidAmount);
         }
 
-        let total = notional_value
+        let _total = notional_value
             .checked_add(fee)
             .ok_or(BridgeError::InvalidAmount)?;
 
