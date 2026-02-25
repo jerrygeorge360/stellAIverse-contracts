@@ -9,6 +9,7 @@ members = [
     "contracts/faucet",
     "contracts/governance",
     "contracts/transaction-coordinator",
+    "contracts/bridge-manager",
     "contracts/metrics-aggregator",
     "lib",
     "shared",
